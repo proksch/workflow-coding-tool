@@ -1,9 +1,15 @@
 strict digraph P123 {
-"aaa";
-    "bbb"    ->    "ccc"    ;   
-   "sub1"    ->    "d"    ;   
+	"aaa";
+	"bbb" -> "ccc";
+	"sub1" -> "d";
 }
 
 strict digraph P124 {
-"eee"->"sub2"->"sub1";   
+	"eee"->"sub2"->"sub1";   
+}
+
+
+
+strict digraph S5P124 {
+	"eee"->"sub2"->"sub1";   
 }

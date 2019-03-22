@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2019 Sebastian Proksch
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,22 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package parser;
 
-grammar PseudoDot;
-@header {
-   package parser;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import parser.PseudoDotParser.GraphsContext;
+
+public class ParserTest {
+	
+	@Test
+	public void asd() {
+		GraphsContext gs = MyParser.parse(new File("data/a/scenario1.dot")).graphs();
+	}	
 }
-
-graphs : digraph+ EOF;
-
-digraph : 'strict' WS+ 'digraph' WS+ ID WS* '{' edge+ WS* '}' WS*;
-
-edge: WS* LABEL (WS* '->' WS* LABEL)* WS* ';' ;
-
-LABEL: '"' ('\\"'|.)*? '"' ;
-
-ID : SCEN_ID? PART_ID;
-PART_ID : 'P' [1-9] [0-9]* ;
-SCEN_ID : 'S' [1-9] [0-9]* ;
-
-WS: ' ' | '\t' | '\n';
