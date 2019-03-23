@@ -144,4 +144,11 @@ public class WorkflowTest {
 		sut.steps.add(new Entry("a", "b"));
 		assertEquals(sut, of("x", " a ", " b ", " a > b "));
 	}
+
+	@Test
+	public void toStringTest() {
+		Workflow sut = of("x", "a", "b", "a>b");
+		String expected = "Workflow(x) {\n" + "\t\"a\";\n" + "\t\"b\";\n" + "\t\"a\" -> \"b\";\n" + "}";
+		assertEquals(expected, sut.toString());
+	}
 }

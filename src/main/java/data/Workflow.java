@@ -69,6 +69,17 @@ public class Workflow {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append('(').append(id).append(") {\n");
+		for(Entry e : steps) {
+			sb.append('\t').append(e).append(";\n");
+		}
+		sb.append('}');
+		return sb.toString();
+	}
 
 	public static Workflow of(String id, String... es) {
 		Workflow w = new Workflow(id);

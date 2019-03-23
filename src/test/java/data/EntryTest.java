@@ -108,11 +108,11 @@ public class EntryTest {
 
 	@Test
 	public void toString1() {
-		assertEquals("'a'", new Entry("a").toString());
+		assertEquals("\"a\"", new Entry("a").toString());
 	}
 
 	@Test
 	public void toString2() {
-		assertEquals("'a' -> 'b'", new Entry("a", "b").toString());
+		assertEquals("\"a\" -> \"b\"", new Entry("a", "b").toString());
 	}
 }

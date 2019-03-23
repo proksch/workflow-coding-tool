@@ -91,9 +91,9 @@ public class Entry {
 	@Override
 	public String toString() {
 		if (isNode()) {
-			return format("'%s'", a);
+			return format("\"%s\"", a);
 		} else {
-			return format("'%s' -> '%s'", a, b);
+			return format("\"%s\" -> \"%s\"", a, b);
 		}
 	}
 }
