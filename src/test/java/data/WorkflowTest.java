@@ -30,8 +30,8 @@ public class WorkflowTest {
 	public void defaults() {
 		Workflow sut = new Workflow("x");
 		assertEquals("x", sut.id);
-		assertEquals(new HashSet<>(), sut.steps);
-		assertEquals(LinkedHashSet.class, sut.steps.getClass());
+		assertEquals(new HashSet<>(), sut.elements);
+		assertEquals(LinkedHashSet.class, sut.elements.getClass());
 	}
 
 	@Test
@@ -45,9 +45,9 @@ public class WorkflowTest {
 	@Test
 	public void equalityNonDefault() {
 		Workflow a = new Workflow("x");
-		a.steps.add(new Entry("a"));
+		a.elements.add(new Entry("a"));
 		Workflow b = new Workflow("x");
-		b.steps.add(new Entry("a"));
+		b.elements.add(new Entry("a"));
 		assertEquals(a, b);
 		assertEquals(a.hashCode(), b.hashCode());
 	}
@@ -55,9 +55,9 @@ public class WorkflowTest {
 	@Test
 	public void equalityDiffId() {
 		Workflow a = new Workflow("x");
-		a.steps.add(new Entry("a"));
+		a.elements.add(new Entry("a"));
 		Workflow b = new Workflow("y");
-		b.steps.add(new Entry("a"));
+		b.elements.add(new Entry("a"));
 		assertNotEquals(a, b);
 		assertNotEquals(a.hashCode(), b.hashCode());
 	}
@@ -65,7 +65,7 @@ public class WorkflowTest {
 	@Test
 	public void equalityDiffSteps() {
 		Workflow a = new Workflow("x");
-		a.steps.add(new Entry("a"));
+		a.elements.add(new Entry("a"));
 		Workflow b = new Workflow("x");
 		assertNotEquals(a, b);
 		assertNotEquals(a.hashCode(), b.hashCode());
@@ -79,40 +79,40 @@ public class WorkflowTest {
 	@Test
 	public void consistencyLabel() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
+		sut.elements.add(new Entry("a"));
 		sut.assertConsistency();
 	}
 
 	@Test
 	public void consistencyLabel2() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
-		sut.steps.add(new Entry("b"));
+		sut.elements.add(new Entry("a"));
+		sut.elements.add(new Entry("b"));
 		sut.assertConsistency();
 	}
 
 	@Test
 	public void consistencyLabelsWithConnection() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
-		sut.steps.add(new Entry("b"));
-		sut.steps.add(new Entry("a", "b"));
+		sut.elements.add(new Entry("a"));
+		sut.elements.add(new Entry("b"));
+		sut.elements.add(new Entry("a", "b"));
 		sut.assertConsistency();
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void consistencyMissingFirstLabel() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("b"));
-		sut.steps.add(new Entry("a", "b"));
+		sut.elements.add(new Entry("b"));
+		sut.elements.add(new Entry("a", "b"));
 		sut.assertConsistency();
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void consistencyMissingSecondLabel() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
-		sut.steps.add(new Entry("a", "b"));
+		sut.elements.add(new Entry("a"));
+		sut.elements.add(new Entry("a", "b"));
 		sut.assertConsistency();
 	}
 
@@ -124,24 +124,24 @@ public class WorkflowTest {
 	@Test
 	public void of1() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
+		sut.elements.add(new Entry("a"));
 		assertEquals(sut, of("x", " a "));
 	}
 
 	@Test
 	public void of2() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
-		sut.steps.add(new Entry("b"));
+		sut.elements.add(new Entry("a"));
+		sut.elements.add(new Entry("b"));
 		assertEquals(sut, of("x", " a ", " b "));
 	}
 
 	@Test
 	public void of3() {
 		Workflow sut = new Workflow("x");
-		sut.steps.add(new Entry("a"));
-		sut.steps.add(new Entry("b"));
-		sut.steps.add(new Entry("a", "b"));
+		sut.elements.add(new Entry("a"));
+		sut.elements.add(new Entry("b"));
+		sut.elements.add(new Entry("a", "b"));
 		assertEquals(sut, of("x", " a ", " b ", " a > b "));
 	}
 

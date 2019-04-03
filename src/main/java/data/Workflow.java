@@ -21,17 +21,17 @@ import java.util.Set;
 public class Workflow {
 
 	public final String id;
-	public final Set<Entry> steps = new LinkedHashSet<>();
+	public final Set<Entry> elements = new LinkedHashSet<>();
 
 	public Workflow(String id) {
 		this.id = id;
 	}
 
 	public void assertConsistency() {
-		for (Entry e : steps) {
+		for (Entry e : elements) {
 			if (e.isEdge()) {
-				boolean isFromDefined = steps.contains(e.getFrom());
-				boolean isToDefined = steps.contains(e.getTo());
+				boolean isFromDefined = elements.contains(e.getFrom());
+				boolean isToDefined = elements.contains(e.getTo());
 				if (!(isFromDefined && isToDefined)) {
 					throw new RuntimeException();
 				}
@@ -44,7 +44,7 @@ public class Workflow {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((steps == null) ? 0 : steps.hashCode());
+		result = prime * result + ((elements == null) ? 0 : elements.hashCode());
 		return result;
 	}
 
@@ -62,10 +62,10 @@ public class Workflow {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (steps == null) {
-			if (other.steps != null)
+		if (elements == null) {
+			if (other.elements != null)
 				return false;
-		} else if (!steps.equals(other.steps))
+		} else if (!elements.equals(other.elements))
 			return false;
 		return true;
 	}
@@ -74,7 +74,7 @@ public class Workflow {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName()).append('(').append(id).append(") {\n");
-		for(Entry e : steps) {
+		for(Entry e : elements) {
 			sb.append('\t').append(e).append(";\n");
 		}
 		sb.append('}');
@@ -87,9 +87,9 @@ public class Workflow {
 			if (e.contains(">")) {
 				String a = e.substring(0, e.indexOf(">")).trim();
 				String b = e.substring(e.indexOf(">") + 1).trim();
-				w.steps.add(new Entry(a, b));
+				w.elements.add(new Entry(a, b));
 			} else {
-				w.steps.add(new Entry(e.trim()));
+				w.elements.add(new Entry(e.trim()));
 			}
 		}
 		return w;

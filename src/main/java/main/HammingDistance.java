@@ -23,12 +23,12 @@ import data.Workflow;
 public class HammingDistance implements IDistance {
 	@Override
 	public double distance(Workflow a, Workflow b) {
-		int max = max(a.steps.size(), b.steps.size());
+		int max = max(a.elements.size(), b.elements.size());
 		
 		int inCommon = 0;
 
-		for (Entry e : a.steps) {
-			if (b.steps.contains(e)) {
+		for (Entry e : a.elements) {
+			if (b.elements.contains(e)) {
 				inCommon += 1;
 			}
 		}
