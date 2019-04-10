@@ -64,10 +64,27 @@ public class run_workflow_validation {
 
 	private static void validateWorkflow(Workflow w) {
 		for (Entry s : w.elements) {
-			validateLabel(w.id, s.a);
+			validateLabel(w.id, s.from);
 			if (s.isEdge()) {
-				validateLabel(w.id, s.b);
+				validateLabel(w.id, s.to);
 			}
+		}
+
+		for (String l : new String[] { "Invalid answer", "Not a problem in practice", "I don't know" }) {
+			if (w.elements.contains(new Entry(l))) {
+				if (w.elements.size() > 1) {
+					System.err.printf("Scenario %s contains %s, but also other labels", w.id, l);
+				}
+			}
+		}
+
+		if (!containsOneOf(w.elements, "Error notification", "Invalid answer", "Not a problem in practice",
+				"I don't know")) {
+			System.err.println("No Start state for scenario " + w.id);
+		}
+
+		if (!containsOneOf(w.elements, "End", "Invalid answer", "Not a problem in practice", "I don't know")) {
+			System.err.println("No End state for scenario " + w.id);
 		}
 
 		String cmt = COMMENT_ROOT + w.id + ".txt";
@@ -80,6 +97,15 @@ public class run_workflow_validation {
 			System.err.println("No image found for scenario " + w.id);
 		}
 
+	}
+
+	private static boolean containsOneOf(Set<Entry> elements, String... labels) {
+		for (String l : labels) {
+			if (elements.contains(new Entry(l))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static void validateLabel(String id, String l) {

@@ -27,14 +27,14 @@ public class EntryTest {
 	@Test
 	public void init1() {
 		Entry sut = new Entry("a");
-		assertEquals("a", sut.a);
+		assertEquals("a", sut.from);
 	}
 
 	@Test
 	public void init2() {
 		Entry sut = new Entry("a", "b");
-		assertEquals("a", sut.a);
-		assertEquals("b", sut.b);
+		assertEquals("a", sut.from);
+		assertEquals("b", sut.to);
 	}
 
 	@Test

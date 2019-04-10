@@ -69,6 +69,9 @@ public class IoUtils {
 			File f = it.next();
 			PseudoDotParser parser = MyParser.parse(f);
 			for (Workflow w : parseWorkflows(parser, f.getAbsolutePath())) {
+				if(res.containsKey(w.id)) {
+					System.err.println("duplicate id: " + w.id);
+				}
 				res.put(w.id, w);
 			}
 		}

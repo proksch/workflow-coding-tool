@@ -119,7 +119,7 @@ public class run_merging {
 				label = String.format("%d", count);
 			} else {
 				sb.append(" [");
-				label = String.format("%s (%d)", e.a, count);
+				label = String.format("%s (%d)", e.from, count);
 			}
 			sb.append("label=\"").append(label).append("\"];\n");
 		}

@@ -19,20 +19,20 @@ import static java.lang.String.format;
 
 public class Entry {
 
-	public final String a;
-	public final String b;
+	public final String from;
+	public final String to;
 
 	public Entry(String a) {
 		assertNotNull(a);
-		this.a = a;
-		this.b = null;
+		this.from = a;
+		this.to = null;
 	}
 
 	public Entry(String a, String b) {
 		assertNotNull(a);
 		assertNotNull(b);
-		this.a = a;
-		this.b = b;
+		this.from = a;
+		this.to = b;
 	}
 
 	private void assertNotNull(Object o) {
@@ -42,7 +42,7 @@ public class Entry {
 	}
 
 	public boolean isNode() {
-		return b == null;
+		return to == null;
 	}
 
 	public boolean isEdge() {
@@ -50,19 +50,19 @@ public class Entry {
 	}
 
 	public Entry getFrom() {
-		return new Entry(a);
+		return new Entry(from);
 	}
 
 	public Entry getTo() {
-		return new Entry(b);
+		return new Entry(to);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((a == null) ? 0 : a.hashCode());
-		result = prime * result + ((b == null) ? 0 : b.hashCode());
+		result = prime * result + ((from == null) ? 0 : from.hashCode());
+		result = prime * result + ((to == null) ? 0 : to.hashCode());
 		return result;
 	}
 
@@ -75,15 +75,15 @@ public class Entry {
 		if (getClass() != obj.getClass())
 			return false;
 		Entry other = (Entry) obj;
-		if (a == null) {
-			if (other.a != null)
+		if (from == null) {
+			if (other.from != null)
 				return false;
-		} else if (!a.equals(other.a))
+		} else if (!from.equals(other.from))
 			return false;
-		if (b == null) {
-			if (other.b != null)
+		if (to == null) {
+			if (other.to != null)
 				return false;
-		} else if (!b.equals(other.b))
+		} else if (!to.equals(other.to))
 			return false;
 		return true;
 	}
@@ -91,9 +91,9 @@ public class Entry {
 	@Override
 	public String toString() {
 		if (isNode()) {
-			return format("\"%s\"", a);
+			return format("\"%s\"", from);
 		} else {
-			return format("\"%s\" -> \"%s\"", a, b);
+			return format("\"%s\" -> \"%s\"", from, to);
 		}
 	}
 }
