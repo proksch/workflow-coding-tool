@@ -29,13 +29,15 @@ public class BranchPurging {
 		Workflow w = new Workflow(in.id);
 		w.elements.addAll(in.elements);
 
+		boolean isChanged = false;
 		for (Entry e : toDel) {
 			if (w.elements.contains(e)) {
 				w = purge(w, e);
+				isChanged = true;
 			}
 		}
 
-		return w;
+		return isChanged ? addFilterNode(w) : w;
 	}
 
 	private static Workflow purge(Workflow w, Entry e) {
@@ -58,7 +60,7 @@ public class BranchPurging {
 			}
 		}
 
-		return addFilterNode(w);
+		return w;
 	}
 
 	private static Workflow addFilterNode(Workflow w) {

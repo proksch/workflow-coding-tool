@@ -29,9 +29,9 @@ import java.util.SortedSet;
 import data.Entry;
 import data.Workflow;
 
-public class run_merging {
+public class run_merging_purgebranches {
 
-	private static final int MIN_REQUIRED_COUNT = 2;
+	public static final int MIN_REQUIRED_COUNT = 3;
 
 	private static final String ROOT = "/Users/seb/versioned/documents/bart-paper/resources/survey_responses/";
 	private static final String MERGED_ROOT = "/Users/seb/versioned/documents/bart-paper/resources/survey_responses/merged/";
@@ -41,7 +41,7 @@ public class run_merging {
 	private static final Map<String, Workflow> seb = readResults(ROOT + "seb/");
 
 	public static void main(String[] args) {
-		for (String scenario : new String[] { "S1", "S2", "S3", "S4" }) {
+		for (String scenario : new String[] { "S1", "S2", "S3", "S4", "All" }) {
 			mergeScenario(scenario);
 		}
 	}
@@ -49,7 +49,7 @@ public class run_merging {
 	private static void mergeScenario(String sid) {
 		List<Workflow> toMerge = new LinkedList<>();
 		for (String id : getSortedIds()) {
-			if (id.startsWith(sid)) {
+			if (id.startsWith(sid) || "All".equals(sid)) {
 				if (joined.containsKey(id)) {
 					toMerge.add(joined.get(id));
 				} else if (carmine.containsKey(id)) {
@@ -68,6 +68,8 @@ public class run_merging {
 		Map<Entry, Integer> counts;
 		Set<Entry> toDel = new HashSet<>();
 
+		BranchPurging bp = new BranchPurging();
+
 		boolean isDone = true;
 		do {
 			isDone = true;
@@ -77,18 +79,12 @@ public class run_merging {
 				// kickout unwanted workflows
 				for (Entry flagged : toDel) {
 					if (w.elements.contains(flagged)) {
-
-						Entry f = new Entry("Filtered");
-						if (counts.containsKey(f)) {
-							counts.put(f, counts.get(f) + 1);
-						} else {
-							counts.put(f, 1);
-						}
-						continue outer;
+						Workflow p = bp.purge(w, toDel);
+						w = p;
 					}
 				}
 
-				// count the rest
+				// count
 				for (Entry e : w.elements) {
 					if (counts.containsKey(e)) {
 						counts.put(e, counts.get(e) + 1);
@@ -109,12 +105,17 @@ public class run_merging {
 		StringBuilder sb = new StringBuilder();
 		sb.append("strict digraph ").append(sid).append(" {\n");
 		sb.append("\tforcelabels=true;\n");
+
+		// all real content
 		String label;
 		for (Entry e : counts.keySet()) {
+			if (isMetaNode(e)) {
+				continue;
+			}
 			int count = counts.get(e);
 			sb.append("\t").append(e.toString());
 			if (e.isEdge()) {
-				double width = Math.max(0.1, round(Math.log10(count) * 3, 1));
+				double width = Math.max(0.1, round(Math.log(count-MIN_REQUIRED_COUNT+1.5)*1.10, 1));
 				sb.append(" [penwidth=").append(width).append(",");
 				label = String.format("%d", count);
 			} else {
@@ -123,9 +124,33 @@ public class run_merging {
 			}
 			sb.append("label=\"").append(label).append("\"];\n");
 		}
+
+		// meta info
+		sb.append("\t META [shape=box, color=white, label=\"Minimum Count: >=").append(MIN_REQUIRED_COUNT)
+				.append("\\l");
+		for (String meta : metas) {
+			Entry e = new Entry(meta);
+			if (counts.containsKey(e)) {
+				sb.append(meta).append(": ").append(counts.get(e)).append("\\l");
+			}
+		}
+		sb.append("\"]");
+
 		sb.append("}");
 
 		writeDotAndGenerateImage(MERGED_ROOT, sid, sb.toString());
+	}
+
+	private static String[] metas = new String[] { "Not a problem in practice", "Invalid answer", "I don't know",
+			"Filtered", "Partially Filtered" };
+
+	private static boolean isMetaNode(Entry e) {
+		for (String meta : metas) {
+			if (new Entry(meta).equals(e)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static double round(double v, int scale) {

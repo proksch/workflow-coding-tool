@@ -94,6 +94,33 @@ public class BranchPurgingTest {
 	}
 
 	@Test
+	public void regression1() {
+		in = w("a>b", "b>c");
+		actual = sut.purge(in, d("a>b"));
+		expected = w("Filtered");
+		
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void regression1b() {
+		in = w("a>b", "b>c");
+		actual = sut.purge(in, d("b>c"));
+		expected = w("Filtered");
+		
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void regression2() {
+		in = w("Error>Locate", "Locate>Inspect", "Inspect>Fix", "Fix>End");
+		actual = sut.purge(in, d("Locate>Inspect"));
+		expected = w("Filtered");
+		
+		assertEquals(expected, actual);
+	}
+
+	@Test
 	public void newReferenceIsCreatedWithoutChange() {
 		in = w("a>b", "b>c");
 		actual = sut.purge(in, d("c>d"));

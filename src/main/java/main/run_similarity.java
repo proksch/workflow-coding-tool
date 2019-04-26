@@ -60,9 +60,8 @@ public class run_similarity {
 				num_exact++;
 				continue;
 			}
-			
-			
-			if(isInvalid(a) || isInvalid(b)) {
+
+			if (isInvalid(a) || isInvalid(b)) {
 				System.out.println("one said invalid");
 				num_invalid++;
 				continue;
@@ -78,9 +77,16 @@ public class run_similarity {
 		System.out.println("------------");
 		System.out.printf("total rating: %d (%d joined, %d separated)\n", num_total, num_joined, num_separated);
 		System.out.printf("exact matches: %d (%.1f%%)\n", num_exact, (100 * num_exact / (double) num_separated));
-		System.out.printf("one of us said \"Invalid answer\": %d (%.1f%%)\n", num_invalid, (100 * num_invalid / (double) num_separated));
-		System.out.printf("partial matches: %d (avg similarity: %.1f%%)\n", similarities.size(),
+		System.out.printf("one of us said \"Invalid answer\": %d (%.1f%%)\n", num_invalid,
+				(100 * num_invalid / (double) num_separated));
+		System.out.printf("partial matches (excl. Invalid): %d (avg similarity: %.1f%%)\n", similarities.size(),
 				getAverage(similarities));
+
+		int totalPartial = similarities.size() + num_invalid;
+
+		double totalSim = getAverage(similarities) * similarities.size() / (double) totalPartial;
+
+		System.out.printf("partial matches (incl. Invalid): %d (avg similarity: %.1f%%)\n", totalPartial, totalSim);
 		System.out.printf("\n");
 
 	}

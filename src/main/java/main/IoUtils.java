@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -69,7 +70,7 @@ public class IoUtils {
 			File f = it.next();
 			PseudoDotParser parser = MyParser.parse(f);
 			for (Workflow w : parseWorkflows(parser, f.getAbsolutePath())) {
-				if(res.containsKey(w.id)) {
+				if (res.containsKey(w.id)) {
 					System.err.println("duplicate id: " + w.id);
 				}
 				res.put(w.id, w);
@@ -184,5 +185,29 @@ public class IoUtils {
 				System.err.println(o);
 			}
 		}
+	}
+
+	public static void write(List<Workflow> wfs, File file) {
+		try {
+			StringBuilder sb = new StringBuilder();
+
+			for(Workflow wf : wfs) {
+				printWorkflow(wf, sb);
+			}
+			
+			FileUtils.writeStringToFile(file, sb.toString(), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static void printWorkflow(Workflow wf, StringBuilder sb) {
+		sb.append("strict digraph ").append(wf.id).append(" {\n");
+		
+		for(Entry e : wf.elements) {
+			sb.append('\t').append(e).append(";\n");
+		}
+		
+		sb.append("}\n");
 	}
 }
